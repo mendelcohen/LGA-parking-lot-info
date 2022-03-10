@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 var cron = require('node-cron');
 const fetch = require("cross-fetch");
-require("dotenv-json")();
+require("dotenv-json");
 const PORT = 3001;
 // Imports the Google Cloud client library
 
@@ -29,7 +29,6 @@ async function getLgaParkingInfo() {
     "method": "GET"
   });
   const data = await response.json();
-  console.log(data);
 
   // Creates a BigQuery client
   const bigquery = new BigQuery({
@@ -58,7 +57,7 @@ async function getLgaParkingInfo() {
   console.log(`Inserted ${rows.length} rows`);
  
 }
-getLgaParkingInfo()
+
 cron.schedule('0,30 * * * *', () => {
   console.log('running a task every 30 minutes');
   getLgaParkingInfo();
