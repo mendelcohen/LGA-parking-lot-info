@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 var cron = require('node-cron');
 const fetch = require("cross-fetch");
+require("dotenv-json")();
 const PORT = 3001;
 // Imports the Google Cloud client library
 
@@ -33,7 +34,7 @@ async function getLgaParkingInfo() {
   // Creates a BigQuery client
   const bigquery = new BigQuery({
     // The relative file path to your Service Account key file
-    keyFilename: 'BigQueryKey.json',
+    keyFilename: '.env.json',
     // The GCP project ID we want to work in
     projectId: 'white-collector-343516'
   });
@@ -57,7 +58,7 @@ async function getLgaParkingInfo() {
   console.log(`Inserted ${rows.length} rows`);
  
 }
-
+getLgaParkingInfo()
 cron.schedule('0,30 * * * *', () => {
   console.log('running a task every 30 minutes');
   getLgaParkingInfo();
