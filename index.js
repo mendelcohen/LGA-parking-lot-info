@@ -57,7 +57,7 @@ async function getLgaParkingInfo() {
   console.log(`Inserted ${rows.length} rows`);
  
 }
-
+getLgaParkingInfo();
 cron.schedule('0,30 * * * *', () => {
   console.log('running a task every 30 minutes');
   getLgaParkingInfo();
