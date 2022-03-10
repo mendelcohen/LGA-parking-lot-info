@@ -1,32 +1,13 @@
 const express = require("express");
 const app = express();
-// const bodyParser = require('body-parser');
-
 var cron = require('node-cron');
-
-// var cors = require('cors');
 const fetch = require("cross-fetch");
-
+const PORT = 3001;
 // Imports the Google Cloud client library
 
 const { BigQuery } = require('@google-cloud/bigquery');
 // Defines the location of the dataset and tables
 const location = 'US';
-// app.use(bodyParser.json());
-// app.use(
-//   bodyParser.urlencoded({
-//     extended: true,
-//   })
-// );
-
-const PORT = 3001;
-
-// app.use(express.json());
-// app.use(express.urlencoded({ 
-//   extended: true
-// }));
-
-// app.use(cors());
 
 async function getLgaParkingInfo() {
   
@@ -49,8 +30,6 @@ async function getLgaParkingInfo() {
   const data = await response.json();
   console.log(data);
 
-  
-
   // Creates a BigQuery client
   const bigquery = new BigQuery({
     // The relative file path to your Service Account key file
@@ -64,11 +43,11 @@ async function getLgaParkingInfo() {
 
   const datasetId = '1234';
   const tableId = 'Parking Lots';
-  const rows = [
-    { ParkingLot: data[0].parkingLot, PercentageOccupied: data[0].percentageOccupied, Time: new Date()},
-    { ParkingLot: data[1].parkingLot, PercentageOccupied: data[1].percentageOccupied, Time: new Date()},
-    { ParkingLot: data[2].parkingLot, PercentageOccupied: data[2].percentageOccupied, Time: new Date()},
-  ];
+  const rows = data.map(lot => ({
+    ParkingLot: lot.parkingLot,
+    PercentageOccupied: lot.percentageOccupied,
+    Time: new Date()
+  }));
 
   // Insert data into a table
   await bigquery
@@ -78,16 +57,12 @@ async function getLgaParkingInfo() {
   console.log(`Inserted ${rows.length} rows`);
  
 }
-getLgaParkingInfo();
+
 cron.schedule('0,30 * * * *', () => {
   console.log('running a task every 30 minutes');
   getLgaParkingInfo();
 });
 
-// app.get('/', getLgaParkingInfo);
-
-  
-  
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
