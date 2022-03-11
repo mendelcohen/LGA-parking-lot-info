@@ -1,9 +1,11 @@
+process.env.NODE_ENV = "production";
 const express = require("express");
 const app = express();
 var cron = require('node-cron');
 const fetch = require("cross-fetch");
 require("dotenv-json");
-const PORT = 3001;
+
+// const PORT = 3001;
 // Imports the Google Cloud client library
 
 const { BigQuery } = require('@google-cloud/bigquery');
@@ -63,6 +65,6 @@ cron.schedule('0,30 * * * *', () => {
   getLgaParkingInfo();
 });
 
-app.listen(PORT, () => {
-  console.log(`Server listening on ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Server listening on ${PORT}`);
+// });
